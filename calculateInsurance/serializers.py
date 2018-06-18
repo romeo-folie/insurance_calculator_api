@@ -11,5 +11,3 @@ class CarSerializer(serializers.HyperlinkedModelSerializer):
                 'view_name':'calculateInsurance:car-detail'
             }
         }
-
-    
