@@ -13,8 +13,7 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from rest_framework import permissions
 from calculateInsurance.permissions import IsOwnerOrReadOnly
-
-
+from rest_framework import renderers
 
 # Create your views here.
 
@@ -22,10 +21,6 @@ class CarList(generics.ListCreateAPIView):
     queryset = Car.objects.all()
     serializer_class = CarSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
-
-    # def perform_create(self, serializer):
-    #     serializer.save()
 
     def post(self, request, format=None):
         theRiskType = request.data['type_of_risk']
@@ -56,6 +51,15 @@ class UserList(generics.ListAPIView):
 class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class CarHighlight(generics.GenericAPIView):
+    queryset = Car.objects.all()
+    renderer_classes = (renderers.StaticHTMLRenderer,)
+
+    def get(self, request, *args, **kwargs):
+        snippet = self.get_object()
+        return Response(snippet.highlighted)
 
 
 # manual function views for the various functions

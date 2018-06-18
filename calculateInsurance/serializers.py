@@ -13,9 +13,9 @@ class CarSerializer(serializers.HyperlinkedModelSerializer):
         }
 
 class UserSerializer(serializers.ModelSerializer):
-    cars = serializers.PrimaryKeyRelatedField(many=True, queryset=Car.objects.all())
+    # cars = serializers.PrimaryKeyRelatedField(many=True, queryset=Car.objects.all())
     owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'cars','owner')
+        fields = ('id', 'username','owner')
