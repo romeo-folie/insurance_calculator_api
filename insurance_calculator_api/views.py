@@ -6,7 +6,5 @@ from rest_framework.reverse import reverse
 @api_view(['GET'])
 def api_root(request, format=None):
     return Response({
-        'calculate_insurance': reverse('calculate_insurance:car-list', request=request,format=format),
+        'Car Information': reverse('calculate_insurance:car-list', request=request,format=format),
     })
-
-    

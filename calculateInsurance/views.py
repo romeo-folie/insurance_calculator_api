@@ -1,47 +1,27 @@
-from django.shortcuts import render
+# from django.shortcuts import render
 from calculateInsurance.models import Car
 from rest_framework import generics
 from rest_framework.response import Response
-from rest_framework.reverse import reverse
+# from rest_framework.reverse import reverse
 from calculateInsurance.serializers import CarSerializer
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, JsonResponse
-from rest_framework.parsers import JSONParser
-from rest_framework.decorators import api_view
+# from django.views.decorators.csrf import csrf_exempt
+# from django.http import HttpResponse, JsonResponse
+# from rest_framework.parsers import JSONParser
+# from rest_framework.decorators import api_view
 from rest_framework import status
 
 
 # Create your views here.
 
-# class CarList(generics.ListCreateAPIView):
-#     queryset = Car.objects.all()
-#     serializer_class = CarSerializer
-#
-# class CarDetail(generics.RetrieveUpdateDestroyAPIView):
-#     serializer_class = CarSerializer
-#
-#     def get_queryset(self):
-#         return Car.objects.all()
+class CarList(generics.ListCreateAPIView):
+    queryset = Car.objects.all()
+    serializer_class = CarSerializer
 
-
-# manual function views for the various functions
-# POST
-
-@csrf_exempt
-@api_view(['GET','POST'])
-def car_list(request,format=None):
-    """List all cars or add new ones"""
-    if request.method == "GET":
-        cars = Car.objects.all()
-        serializer = CarSerializer(cars,many=True)
-        return Response(serializer.data)
-
-    elif request.method == "POST":
-        # data = JSONParser().parse(request)
+    def post(self, request, format=None):
         theRiskType = request.data['type_of_risk']
         theInsuranceType = request.data['insurance_type']
 
-        serializer = CarSerializer(data = request.data,)
+        serializer = CarSerializer(data=request.data)
         insurancePaymentData = mainPremiumFunction(theRiskType, theInsuranceType)
 
         if serializer.is_valid():
@@ -49,31 +29,63 @@ def car_list(request,format=None):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class CarDetail(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = CarSerializer
 
-@csrf_exempt
-@api_view(['GET','PUT','DELETE'])
-def car_detail(request,pk,format=None):
-    """Retrieve, update or delete an existing car"""
-    try:
-        car = Car.objects.get(pk=pk)
-    except Car.DoesNotExist:
-        return Response(status=status.HTTP_400_NOT_FOUND)
+    def get_queryset(self):
+        return Car.objects.all()
 
-    if request.method == "GET":
-        serializer = CarSerializer(car)
-        return Response(serializer.data)
 
-    elif request.method == "PUT":
-        # data = JSONParser().parse(request)
-        serializer = CarSerializer(car, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# manual function views for the various functions
+# POST
 
-    elif request.method == "DELETE":
-        car.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+# @csrf_exempt
+# @api_view(['GET','POST'])
+# def car_list(request,format=None):
+#     """List all cars or add new ones"""
+#     if request.method == "GET":
+#         cars = Car.objects.all()
+#         serializer = CarSerializer(cars,many=True)
+#         return Response(serializer.data)
+#
+#     elif request.method == "POST":
+#         # data = JSONParser().parse(request)
+#         theRiskType = request.data['type_of_risk']
+#         theInsuranceType = request.data['insurance_type']
+#
+#         serializer = CarSerializer(data = request.data,)
+#         insurancePaymentData = mainPremiumFunction(theRiskType, theInsuranceType)
+#
+#         if serializer.is_valid():
+#             serializer.save(insurance_payment_due = insurancePaymentData)
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# @csrf_exempt
+# @api_view(['GET','PUT','DELETE'])
+# def car_detail(request,pk,format=None):
+#     """Retrieve, update or delete an existing car"""
+#     try:
+#         car = Car.objects.get(pk=pk)
+#     except Car.DoesNotExist:
+#         return Response(status=status.HTTP_400_NOT_FOUND)
+#
+#     if request.method == "GET":
+#         serializer = CarSerializer(car)
+#         return Response(serializer.data)
+#
+#     elif request.method == "PUT":
+#         # data = JSONParser().parse(request)
+#         serializer = CarSerializer(car, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#
+#     elif request.method == "DELETE":
+#         car.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 
