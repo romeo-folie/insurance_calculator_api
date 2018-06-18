@@ -1,5 +1,9 @@
 from django.db import models
 import uuid
+# from pygments.lexers import get_lexer_by_name
+from pygments.formatters.html import HtmlFormatter
+from pygments import highlight
+from django.contrib.auth.models import User
 # from calculateInsurance import views
 
 # Create your models here.
@@ -16,6 +20,8 @@ class Car(models.Model):
     license_issued_year = models.CharField(max_length=4)
     insurance_type = models.CharField(max_length=50)
     insurance_payment_due = models.IntegerField(editable=False, default=333, null=True)
+    owner = models.ForeignKey('auth.User', related_name='snippets', on_delete=models.CASCADE)
+    # highlighted = models.TextField()
 
     def __str__(self):
-        return "{} {}".format(self.type_of_risk, self.insurance_type)
+        return "Id: {} Make: {} Risk: {} Insurance Type: {} Insurance Payment: {}".format(self.id, self.make_of_vehicle, self.type_of_risk, self.insurance_type, self.insurance_payment_due)

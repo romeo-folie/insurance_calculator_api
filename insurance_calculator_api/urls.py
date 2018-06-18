@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.api_root),
     url(r'^', include('calculateInsurance.urls', namespace='calculate_insurance')),
+    url(r'^api-auth/', include('rest_framework.urls')),
 ]

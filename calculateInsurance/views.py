@@ -4,11 +4,16 @@ from rest_framework import generics
 from rest_framework.response import Response
 # from rest_framework.reverse import reverse
 from calculateInsurance.serializers import CarSerializer
+from calculateInsurance.serializers import UserSerializer
 # from django.views.decorators.csrf import csrf_exempt
 # from django.http import HttpResponse, JsonResponse
 # from rest_framework.parsers import JSONParser
 # from rest_framework.decorators import api_view
 from rest_framework import status
+from django.contrib.auth.models import User
+from rest_framework import permissions
+from calculateInsurance.permissions import IsOwnerOrReadOnly
+
 
 
 # Create your views here.
@@ -16,6 +21,11 @@ from rest_framework import status
 class CarList(generics.ListCreateAPIView):
     queryset = Car.objects.all()
     serializer_class = CarSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+
+    # def perform_create(self, serializer):
+    #     serializer.save()
 
     def post(self, request, format=None):
         theRiskType = request.data['type_of_risk']
@@ -25,15 +35,27 @@ class CarList(generics.ListCreateAPIView):
         insurancePaymentData = mainPremiumFunction(theRiskType, theInsuranceType)
 
         if serializer.is_valid():
-            serializer.save(insurance_payment_due = insurancePaymentData)
+            serializer.save(insurance_payment_due = insurancePaymentData, owner=self.request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CarDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CarSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,IsOwnerOrReadOnly,)
+
 
     def get_queryset(self):
         return Car.objects.all()
+
+
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 # manual function views for the various functions
