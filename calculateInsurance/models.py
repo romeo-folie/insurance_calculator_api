@@ -21,7 +21,7 @@ class Car(models.Model):
     insurance_type = models.CharField(max_length=50)
     insurance_payment_due = models.IntegerField(editable=False, default=333, null=True)
     owner = models.ForeignKey('auth.User', related_name='snippets', on_delete=models.CASCADE)
-    # highlighted = models.TextField()
+    highlighted = models.TextField(null=True)
 
     def __str__(self):
         return "Id: {} Make: {} Risk: {} Insurance Type: {} Insurance Payment: {}".format(self.id, self.make_of_vehicle, self.type_of_risk, self.insurance_type, self.insurance_payment_due)
