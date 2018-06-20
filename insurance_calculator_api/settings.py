@@ -24,7 +24,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, "calculateInsurance/templates/rest_framewo
 SECRET_KEY = '*y+ywj!a3h##9dza(uih*&=e48vw%b^2#jbe04xsl(9vq-iihz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -128,3 +128,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
