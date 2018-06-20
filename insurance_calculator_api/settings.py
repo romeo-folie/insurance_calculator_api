@@ -26,7 +26,7 @@ SECRET_KEY = '*y+ywj!a3h##9dza(uih*&=e48vw%b^2#jbe04xsl(9vq-iihz'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1','localhost','motor-insurance-endpoint.herokuapp.com']
 
 #Pagination
 REST_FRAMEWORK = {
